@@ -4,19 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MicropostsController extends Controller
-{
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-
 use App\Http\Controllers\Controller;
 
 class MicropostsController extends Controller
 {
-
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         $data = [];
@@ -34,8 +30,8 @@ class MicropostsController extends Controller
             return view('welcome');
         }
     }
-}
-    public function store(Request $request)
+    
+        public function store(Request $request)
     {
         $this->validate($request, [
             'content' => 'required|max:191',
@@ -49,7 +45,6 @@ class MicropostsController extends Controller
     }
     
     
-    
         public function destroy($id)
     {
         $micropost = \App\Micropost::find($id);
@@ -60,4 +55,5 @@ class MicropostsController extends Controller
 
         return redirect()->back();
     }
+
 }
