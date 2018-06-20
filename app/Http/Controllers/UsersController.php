@@ -8,8 +8,31 @@ use App\User; // add
 
 class UsersController extends Controller
 {
+    public function index()
+    {
+        $users = User::all();
+        
+        return view('users.index', [
+            'users' => $users,
+        ]);
+    }
+    
+    public function show($id)
+    {
+        $user = User::find($id);
+        $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
 
-     public function followings($id)
+        $data = [
+            'user' => $user,
+            'microposts' => $microposts,
+        ];
+
+        $data += $this->counts($user);
+
+        return view('users.show', $data);
+    }
+    
+        public function followings($id)
     {
         $user = User::find($id);
         $followings = $user->followings()->paginate(10);
@@ -39,4 +62,6 @@ class UsersController extends Controller
         return view('users.followers', $data);
     }
     
+    
+
 }
