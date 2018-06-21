@@ -14,7 +14,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
+         protected $fillable = [
         'name', 'email', 'password',
     ];
 
@@ -23,17 +23,34 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
+         protected $hidden = [
         'password', 'remember_token',
     ];
     
-    
-       public function microposts()
+         public function microposts()
     {
         return $this->hasMany(Micropost::class);
     }
     
-public function follow($userId)
+            public function feed_microposts()
+    {
+        $follow_user_ids = $this->followings()-> pluck('users.id')->toArray();
+        $follow_user_ids[] = $this->id;
+        return Micropost::whereIn('user_id', $follow_user_ids);
+    }
+    
+    
+        public function followings()
+    {
+        return $this->belongsToMany(User::class, 'user_follow', 'user_id', 'follow_id')->withTimestamps();
+    }
+
+        public function followers()
+    {
+        return $this->belongsToMany(User::class, 'user_follow', 'follow_id', 'user_id')->withTimestamps();
+    }
+    
+        public function follow($userId)
 {
     // confirm if already following
     $exist = $this->is_following($userId);
@@ -50,7 +67,7 @@ public function follow($userId)
     }
 }
 
-public function unfollow($userId)
+     public function unfollow($userId)
 {
     // confirming if already following
     $exist = $this->is_following($userId);
@@ -67,27 +84,10 @@ public function unfollow($userId)
         return false;
     }
 }
-
-
-public function is_following($userId) {
+        public function is_following($userId) {
     return $this->followings()->where('follow_id', $userId)->exists();
 }
-    
-    public function followings()
-    {
-        return $this->belongsToMany(User::class, 'user_follow', 'user_id', 'follow_id')->withTimestamps();
-    }
 
-    public function followers()
-    {
-        return $this->belongsToMany(User::class, 'user_follow', 'follow_id', 'user_id')->withTimestamps();
-    }
-    
-    public function feed_microposts()
-    {
-        $follow_user_ids = $this->followings()-> pluck('users.id')->toArray();
-        $follow_user_ids[] = $this->id;
-        return Micropost::whereIn('user_id', $follow_user_ids);
-    }
-    
+
+
 }

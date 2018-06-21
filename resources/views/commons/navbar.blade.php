@@ -21,9 +21,7 @@
                                 <li role="separator" class="divider"></li>
                                 <li>{!! link_to_route('logout.get', 'Logout') !!}</li>
                             </ul>
-                                <li role="separator" class="divider"></li>
-                                <li>{!! link_to_route('logout.get', 'Logout') !!}</li>
-                            </ul>
+                                
                         </li>
                     @else
                         <li>{!! link_to_route('signup.get', 'Signup') !!}</li>
