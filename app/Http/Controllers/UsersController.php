@@ -8,13 +8,22 @@ use App\User; // add
 
 class UsersController extends Controller
 {
-    public function index()
+     public function index()
     {
-        $users = User::all();
-        
-        return view('users.index', [
-            'users' => $users,
-        ]);
+        $data = [];
+        if (\Auth::check()) {
+            $user = \Auth::user();
+            $microposts = $user->microposts()->orderBy('created_at', 'desc')->paginate(10);
+
+            $data = [
+                'user' => $user,
+                'microposts' => $microposts,
+            ];
+            $data += $this->counts($user);
+            return view('users.show', $data);
+        }else {
+            return view('welcome');
+        }
     }
     
     public function show($id)
@@ -32,7 +41,7 @@ class UsersController extends Controller
         return view('users.show', $data);
     }
     
-        public function followings($id)
+         public function followings($id)
     {
         $user = User::find($id);
         $followings = $user->followings()->paginate(10);

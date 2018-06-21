@@ -19,4 +19,4 @@ use Illuminate\Http\Request;
         return redirect()->back();
     }
 }
-}
+
