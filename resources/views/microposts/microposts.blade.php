@@ -10,11 +10,13 @@
                 {!! link_to_route('users.show', $user->name, ['id' => $user->id]) !!} <span class="text-muted">posted at {{ $micropost->created_at }}</span>
             </div> 
             <div>
-                @if (Auth::id() == $micropost->user_id)
+            @include('user_favorite.favorite_button', ['$micropost' => $micropost])
+            @if (Auth::id() == $micropost->user_id)
                     {!! Form::open(['route' => ['microposts.destroy', $micropost->id], 'method' => 'delete']) !!}
                         {!! Form::submit('Delete', ['class' => 'btn btn-danger btn-xs']) !!}
                     {!! Form::close() !!}
-                @endif
+            @endif
+                
             </div>
             <div>
                 <p>{!! nl2br(e($micropost->content)) !!}</p>
